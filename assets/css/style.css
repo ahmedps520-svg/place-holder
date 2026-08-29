@@ -1,0 +1,399 @@
+/* ==========================================================
+   WATER CHARITY — design mockup
+   Light, calm and trustworthy: paper, deep water teal, warm sand.
+   A donation page has to feel safe, not dramatic.
+   ========================================================== */
+
+/* ---------- 1. TOKENS ---------- */
+:root{
+  --paper:  #F7F6F3;
+  --paper-2:#FFFFFF;
+  --sand:   #EFE9DE;
+
+  --deep:   #0B4F5C;
+  --deep-2: #0D6274;
+  --teal:   #14889B;
+  --teal-l: #E2F1F3;
+
+  --amber:  #C98A2E;
+  --amber-l:#F6EBD8;
+
+  --ink:    #10201F;
+  --ink-2:  #4C5B5C;
+  --mut:    #7E8C8D;
+  --line:   #DFDDD6;
+  --line-2: #C9C6BC;
+
+  --ff-d: 'Rubik', system-ui, sans-serif;
+  --ff-b: 'Rubik', system-ui, sans-serif;
+  --ff-s: 'Fraunces', Georgia, serif;
+
+  --wrp: 1180px;
+  --pad: clamp(20px, 5vw, 60px);
+
+  --e:  cubic-bezier(.22,.7,.14,1);
+  --e2: cubic-bezier(.34,1.36,.6,1);
+  --dock: 0px;
+  --bar: 0px;
+}
+html[lang="en"]{ --ff-d: 'Fraunces', Georgia, serif; --ff-b: 'Rubik', system-ui, sans-serif; }
+
+/* ---------- 2. BASE ---------- */
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; scroll-padding-top:96px; }
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--ff-b); font-size:16.5px; line-height:1.85; font-weight:300;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  padding-bottom:var(--dock); padding-top:var(--bar);
+}
+body.lock{ overflow:hidden; }
+img,svg{ display:block; max-width:100%; }
+a{ color:inherit; text-decoration:none; }
+button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; }
+h1,h2,h3{ margin:0; font-family:var(--ff-d); font-weight:600; line-height:1.28; }
+html[lang="en"] h1,html[lang="en"] h2,html[lang="en"] h3{ font-weight:400; letter-spacing:-.015em; line-height:1.12; }
+html[lang="ar"] h1,html[lang="ar"] h2,html[lang="ar"] h3{ line-height:1.46; }
+p,dd,dt{ margin:0; }
+ul,ol,dl{ margin:0; padding:0; list-style:none; }
+::selection{ background:var(--teal); color:#fff; }
+:focus-visible{ outline:2px solid var(--deep); outline-offset:3px; border-radius:4px; }
+
+.wrp{ width:100%; max-width:var(--wrp); margin-inline:auto; padding-inline:var(--pad); }
+.i{ width:17px; height:17px; flex:0 0 auto; fill:currentColor; }
+
+.rv{ opacity:0; transform:translateY(24px); transition:opacity .95s var(--e), transform .95s var(--e); transition-delay:var(--d,0s); }
+.rv.in{ opacity:1; transform:none; }
+.steps .step:nth-child(2){ --d:.09s } .steps .step:nth-child(3){ --d:.18s }
+.tally .tal:nth-child(2){ --d:.1s }   .tally .tal:nth-child(3){ --d:.2s }
+.cards .card:nth-child(2){ --d:.09s } .cards .card:nth-child(3){ --d:.18s }
+
+/* every unfilled slot is visibly a slot, so nothing invented can ship by accident */
+.ph{
+  border-bottom:1.5px dashed var(--amber); padding-inline:2px;
+  background:var(--amber-l); border-radius:2px;
+}
+.ph-num{ position:relative; }
+
+.wash{
+  position:fixed; inset:0; z-index:-2; pointer-events:none;
+  background-image:
+    radial-gradient(42% 34% at 12% 8%, rgba(20,136,155,.09), transparent 70%),
+    radial-gradient(38% 30% at 88% 78%, rgba(201,138,46,.07), transparent 70%);
+}
+.prog{ position:fixed; top:0; inset-inline:0; height:3px; z-index:960; pointer-events:none; }
+.prog i{ display:block; height:100%; width:0; background:linear-gradient(90deg,var(--teal),var(--deep)); }
+[dir="rtl"] .prog i{ margin-inline-start:auto; }
+
+/* ---------- 3. MOCKUP BAR ---------- */
+.mockbar{
+  position:fixed; top:0; inset-inline:0; z-index:980;
+  display:flex; align-items:center; justify-content:center; gap:14px;
+  background:repeating-linear-gradient(135deg,#2A2622 0 12px,#332E28 12px 24px);
+  color:#F3E9D6; font-size:12.5px; padding:9px 46px 9px 16px; text-align:center;
+}
+.mockbar button{ position:absolute; inset-inline-end:12px; font-size:20px; line-height:1; color:#F3E9D6; opacity:.7; }
+.mockbar button:hover{ opacity:1; }
+.mockbar.gone{ display:none; }
+
+/* ---------- 4. NAV ---------- */
+.nav{
+  position:fixed; top:var(--bar); inset-inline:0; z-index:900; padding-block:15px;
+  transition:padding .5s var(--e), background .5s, border-color .5s, transform .5s var(--e), top .3s;
+  border-bottom:1px solid transparent;
+}
+.nav.slid{ transform:translateY(-140%); }
+.nav.stuck{
+  padding-block:9px; background:rgba(247,246,243,.92); border-bottom-color:var(--line);
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+}
+.nav__in{ width:100%; max-width:var(--wrp); margin-inline:auto; padding-inline:var(--pad); display:flex; align-items:center; gap:18px; }
+
+.mark{ display:flex; align-items:center; gap:10px; flex:0 0 auto; }
+.mark__d{ width:22px; fill:var(--teal); flex:0 0 auto; }
+.mark__t{ display:grid; line-height:1.25; }
+.mark__t b{ font-family:var(--ff-d); font-size:15.5px; font-weight:600; color:var(--ink); }
+.mark__t i{ font-style:normal; font-size:11px; color:var(--mut); }
+
+.menu{ display:flex; align-items:center; gap:22px; margin-inline:auto; }
+.menu a{ position:relative; font-size:14.5px; color:var(--ink-2); transition:color .35s; padding-block:6px; }
+html[lang="en"] .menu a{ font-size:13.5px; }
+.menu a::after{ content:''; position:absolute; bottom:0; inset-inline-start:0; width:0; height:2px; background:var(--teal); transition:width .45s var(--e); border-radius:2px; }
+.menu a:hover{ color:var(--deep); }
+.menu a:hover::after{ width:100%; }
+.menu__cta{ display:none; }
+
+.nav__r{ display:flex; align-items:center; gap:8px; flex:0 0 auto; }
+.lng{
+  min-width:42px; height:38px; padding-inline:10px; border:1px solid var(--line-2); border-radius:4px;
+  font-size:11.5px; font-weight:600; letter-spacing:.08em; color:var(--ink-2);
+  display:grid; place-items:center; transition:.35s;
+}
+.lng:hover{ border-color:var(--deep); color:var(--deep); }
+.brg{ display:none; width:44px; height:44px; flex-direction:column; justify-content:center; gap:6px; padding:0 9px; }
+.brg i{ display:block; height:2px; background:var(--ink); border-radius:2px; transition:.4s var(--e); }
+.brg.on i:nth-child(1){ transform:translateY(4px) rotate(45deg); }
+.brg.on i:nth-child(2){ transform:translateY(-4px) rotate(-45deg); }
+
+/* ---------- 5. BUTTONS ---------- */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:9px;
+  min-height:48px; padding:13px 26px; border-radius:99px; font-size:15px; font-weight:600;
+  white-space:nowrap; transition:.4s var(--e); border:1px solid transparent; color:var(--ink);
+}
+.btn--go{ background:var(--deep); border-color:var(--deep); color:#fff; box-shadow:0 12px 28px -14px rgba(11,79,92,.8); }
+.btn--go:hover{ background:var(--deep-2); border-color:var(--deep-2); transform:translateY(-2px); box-shadow:0 18px 34px -14px rgba(11,79,92,.9); }
+.btn--soft{ background:var(--paper-2); border-color:var(--line-2); }
+.btn--soft:hover{ border-color:var(--deep); color:var(--deep); }
+.btn--lg{ min-height:56px; padding:16px 34px; font-size:16px; }
+.btn--xl{ min-height:62px; padding:19px 44px; font-size:17px; }
+.nav__cta{ min-height:38px; padding:9px 20px; font-size:13.5px; }
+[dir="rtl"] .btn .i{ transform:scaleX(-1); }
+
+/* ---------- 6. HERO ---------- */
+.hero{
+  position:relative; min-height:92svh; display:flex; align-items:center;
+  padding-block:150px 130px; overflow:hidden; isolation:isolate;
+}
+.hero__media{ position:absolute; inset:-12% 0 0; z-index:-2; will-change:transform; }
+.hero__media img{
+  width:100%; height:100%; object-fit:cover; object-position:center 46%;
+  opacity:0; transform:scale(1.06); transition:opacity 1.4s var(--e), transform 2.4s var(--e);
+}
+.hero__media img.seen{ opacity:1; transform:none; }
+/* light scrim: a charity page should feel open, not heavy */
+.hero__scrim{
+  position:absolute; inset:0;
+  background:linear-gradient(to left, rgba(247,246,243,.97) 6%, rgba(247,246,243,.86) 42%, rgba(247,246,243,.35) 78%, rgba(247,246,243,.15) 100%);
+}
+[dir="ltr"] .hero__scrim{
+  background:linear-gradient(to right, rgba(247,246,243,.97) 6%, rgba(247,246,243,.86) 42%, rgba(247,246,243,.35) 78%, rgba(247,246,243,.15) 100%);
+}
+
+.hero__in{ position:relative; max-width:640px; }
+.eyb{ display:inline-flex; align-items:center; gap:10px; font-size:13.5px; color:var(--deep); margin-bottom:20px; }
+html[lang="en"] .eyb{ letter-spacing:.16em; text-transform:uppercase; font-size:11px; }
+.drop{
+  width:9px; height:11px; flex:0 0 auto; background:var(--teal);
+  border-radius:50% 50% 50% 50% / 62% 62% 38% 38%; transform:rotate(180deg);
+  animation:bob 3.4s var(--e) infinite;
+}
+@keyframes bob{ 0%,100%{ transform:rotate(180deg) translateY(0) } 50%{ transform:rotate(180deg) translateY(-3px) } }
+
+.hero__h{ font-size:clamp(2.2rem,5.6vw,4.4rem); margin-bottom:22px; color:var(--ink); }
+.hero__h .wm{ display:inline-block; overflow:hidden; vertical-align:bottom; padding-block:.06em; }
+.hero__h .wm > i{
+  display:inline-block; font-style:normal; transform:translateY(112%);
+  animation:wup .95s var(--e) forwards; animation-delay:calc(.35s + var(--i) * .07s);
+}
+@keyframes wup{ to{ transform:none } }
+.hero__p{ font-size:clamp(15px,1.7vw,18px); color:var(--ink-2); max-width:44ch; margin-bottom:32px; }
+.hero__act{ display:flex; flex-wrap:wrap; gap:12px; }
+
+.wave{ position:absolute; inset-inline:0; bottom:-1px; width:100%; height:clamp(46px,7vw,90px); fill:var(--paper); z-index:1; }
+
+/* ---------- 7. COUNTERS ---------- */
+.tally{ padding-block:clamp(44px,6vw,70px) clamp(20px,3vw,30px); }
+.tally__in{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; text-align:center; }
+.tal{ display:grid; gap:6px; justify-items:center; }
+.tal b{ font-family:var(--ff-s); font-size:clamp(2.2rem,5.6vw,3.8rem); line-height:1; color:var(--deep); font-weight:600; }
+.tal em{ font-style:normal; font-family:var(--ff-s); font-size:1.4rem; color:var(--deep); margin-top:-8px; }
+.tal span{ font-size:13.5px; color:var(--mut); }
+.tally__note{
+  margin-top:18px; text-align:center; font-size:12px; color:var(--amber);
+  background:var(--amber-l); border:1px dashed var(--amber); border-radius:6px;
+  padding:8px 14px; max-width:640px; margin-inline:auto;
+}
+
+/* ---------- 8. SECTIONS ---------- */
+.sec{ padding-block:clamp(64px,8vw,116px); }
+.hd{ max-width:54ch; margin-bottom:clamp(34px,4.6vw,54px); }
+.hd--c{ margin-inline:auto; text-align:center; }
+.kick{ font-size:12.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--teal); font-weight:600; margin-bottom:13px; }
+html[lang="ar"] .kick{ letter-spacing:.05em; text-transform:none; font-size:14px; }
+.h2{ font-size:clamp(1.7rem,4vw,3rem); }
+
+/* ---------- 9. STEPS ---------- */
+.steps{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
+.step{
+  background:var(--paper-2); border:1px solid var(--line); border-radius:12px;
+  padding:clamp(24px,3vw,34px); position:relative; transition:.4s var(--e);
+}
+.step:hover{ border-color:var(--teal); transform:translateY(-3px); box-shadow:0 20px 40px -28px rgba(11,79,92,.5); }
+.step__n{
+  display:grid; place-items:center; width:38px; height:38px; border-radius:50%;
+  background:var(--teal-l); color:var(--deep); font-weight:600; font-size:16px; margin-bottom:16px;
+}
+.step h3{ font-size:1.2rem; margin-bottom:8px; }
+.step p{ font-size:15px; color:var(--ink-2); }
+
+/* ---------- 10. DONATE PANEL ---------- */
+.give{ background:var(--sand); border-block:1px solid var(--line); }
+.panel{
+  background:var(--paper-2); border:1px solid var(--line); border-radius:16px;
+  padding:clamp(24px,4vw,44px); max-width:720px; margin-inline:auto;
+  box-shadow:0 30px 60px -40px rgba(16,32,31,.35);
+}
+.amounts{ display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; }
+.amt{
+  min-height:58px; border:1.5px solid var(--line-2); border-radius:10px; background:var(--paper);
+  font-size:17px; font-weight:600; color:var(--ink); transition:.3s var(--e); position:relative;
+}
+.amt:hover{ border-color:var(--teal); }
+.amt.is-on{ border-color:var(--deep); background:var(--deep); color:#fff; }
+
+.custom{ display:grid; gap:8px; margin-top:20px; }
+.custom > span{ font-size:13.5px; color:var(--mut); }
+.custom__f{ display:flex; align-items:center; gap:10px; border:1.5px solid var(--line-2); border-radius:10px; padding:0 16px; background:var(--paper); transition:border-color .3s; }
+.custom__f:focus-within{ border-color:var(--deep); }
+.custom__f input{
+  flex:1; min-width:0; border:0; background:none; font:inherit; font-size:17px; font-weight:600;
+  color:var(--ink); padding:14px 0; outline:none;
+}
+.custom__f input::-webkit-outer-spin-button,.custom__f input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+.custom__f input[type=number]{ -moz-appearance:textfield; }
+.custom__f em{ font-style:normal; font-size:14px; color:var(--mut); flex:0 0 auto; }
+
+.impact{
+  margin-top:22px; background:var(--teal-l); border:1px solid rgba(20,136,155,.25);
+  border-radius:10px; padding:18px 20px; display:grid; gap:4px;
+}
+.impact__l{ font-size:13px; color:var(--deep); }
+.impact b{ font-family:var(--ff-s); font-size:clamp(1.3rem,3vw,1.9rem); color:var(--deep); font-weight:600; }
+.impact i{ font-style:normal; font-size:11.5px; color:var(--amber); display:block; margin-top:4px; }
+
+.pay{ margin-top:26px; }
+/* Apple Pay button styling per Apple's guidance — but deliberately inert.
+   A donation button that looks live and takes nothing is worse than none. */
+.applepay{
+  width:100%; min-height:56px; border-radius:10px; background:#000; color:#fff;
+  display:flex; align-items:center; justify-content:center; gap:7px;
+  font-size:19px; font-weight:500; letter-spacing:.01em;
+  opacity:.45; cursor:not-allowed; transition:opacity .3s;
+}
+.applepay svg{ width:24px; height:24px; fill:#fff; }
+.applepay:hover{ opacity:.6; }
+.paynote{
+  margin-top:10px; font-size:12.5px; color:var(--amber); background:var(--amber-l);
+  border:1px dashed var(--amber); border-radius:8px; padding:10px 14px; text-align:center;
+}
+
+.alts{ margin-top:24px; padding-top:22px; border-top:1px solid var(--line); display:grid; gap:12px; }
+.alts__l{ font-size:13px; color:var(--mut); }
+.alts__row{ display:flex; flex-wrap:wrap; gap:9px; }
+.alt{ font-size:13.5px; padding:9px 15px; border-radius:99px; border:1px solid var(--line-2); color:var(--ink-2); }
+
+/* ---------- 11. WHERE ---------- */
+.where__in{ display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr); gap:clamp(30px,5vw,68px); align-items:center; }
+.where__p{ font-size:16px; color:var(--ink-2); margin-block:16px 22px; }
+.ticks{ display:grid; gap:11px; }
+.ticks li{ position:relative; padding-inline-start:30px; font-size:15px; color:var(--ink-2); }
+/* a checkmark is not a directional glyph — physical borders keep the tick a
+   tick, where logical ones flip it into a chevron in RTL */
+.ticks li::before{
+  content:''; position:absolute; inset-inline-start:2px; top:.5em; width:15px; height:8px;
+  border-left:2px solid var(--teal); border-bottom:2px solid var(--teal);
+  transform:rotate(-45deg); border-radius:1px;
+}
+.where__pic{ margin:0; border-radius:14px; overflow:hidden; border:1px solid var(--line); aspect-ratio:4/5; background:var(--sand); }
+.where__pic img{ width:100%; height:100%; object-fit:cover; transition:transform 1.1s var(--e); }
+.where__pic:hover img{ transform:scale(1.04); }
+
+/* ---------- 12. TRUST ---------- */
+.trust{ background:var(--paper-2); border-block:1px solid var(--line); }
+.cards{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+.card{ background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:clamp(22px,3vw,30px); }
+.card h3{ font-size:1.1rem; margin-bottom:8px; }
+.card p{ font-size:14.5px; color:var(--ink-2); }
+.card b{ font-weight:600; }
+
+/* ---------- 13. FINAL ---------- */
+.final{
+  padding-block:clamp(74px,10vw,140px); text-align:center;
+  background:linear-gradient(180deg, var(--paper), var(--teal-l));
+}
+.final__in{ display:grid; justify-items:center; gap:26px; }
+.final__h{ font-size:clamp(1.8rem,5vw,3.6rem); color:var(--deep); }
+
+/* ---------- 14. FOOTER ---------- */
+.ft{ background:var(--deep); color:#DCEDEF; padding-block:clamp(44px,6vw,70px); }
+.ft__in{ display:grid; gap:24px; justify-items:center; text-align:center; }
+.ft .mark__d{ fill:#7FD3DF; }
+.ft .mark__t b{ color:#fff; }
+.ft .mark__t i{ color:rgba(220,237,239,.6); }
+.ft__nav{ display:flex; flex-wrap:wrap; justify-content:center; gap:14px 24px; }
+.ft__nav a{ font-size:14px; color:rgba(220,237,239,.78); transition:color .3s; }
+.ft__nav a:hover{ color:#fff; }
+.ft__lic{ font-size:13px; color:rgba(220,237,239,.6); display:flex; gap:8px; align-items:center; }
+.ft__end{ display:grid; gap:6px; padding-top:22px; border-top:1px solid rgba(220,237,239,.18); width:100%; font-size:12.5px; color:rgba(220,237,239,.55); }
+.credit a{ color:rgba(220,237,239,.8); border-bottom:1px solid rgba(220,237,239,.3); transition:.3s; }
+.credit a:hover{ color:#fff; border-bottom-color:#fff; }
+/* the placeholder marker has to stay legible on the dark footer too */
+.ft .ph{ background:rgba(201,138,46,.22); border-bottom-color:#E9B45F; color:#FBE7C4; }
+
+.dock{ display:none; }
+
+/* ---------- 15. RESPONSIVE ---------- */
+@media (max-width:1000px){
+  .where__in{ grid-template-columns:minmax(0,1fr); }
+  .where__pic{ max-width:460px; margin-inline:auto; aspect-ratio:4/3; }
+  .steps,.cards{ grid-template-columns:minmax(0,1fr); }
+}
+@media (max-width:860px){
+  .brg{ display:flex; }
+  .nav__cta{ display:none; }
+  .menu__cta{ display:inline-flex; }
+
+  /* .nav gets backdrop-filter when stuck, which makes it the containing block
+     for position:fixed children — inset:0 would resolve against the bar and
+     push the links off-screen. Pin to the viewport explicitly. */
+  .menu{
+    position:fixed; top:0; inset-inline:0; height:100dvh; margin:0;
+    background:var(--paper); flex-direction:column; justify-content:center; align-items:center;
+    gap:4px; z-index:2; opacity:0; visibility:hidden; transition:opacity .4s var(--e), visibility .4s;
+  }
+  .menu.open{ opacity:1; visibility:visible; }
+  .menu a{ font-size:22px; color:var(--ink); padding-block:12px; }
+  .menu a::after{ inset-inline-start:50%; translate:-50% 0; }
+  .menu__cta{
+    margin-top:20px; background:var(--deep); color:#fff; border-radius:99px;
+    padding:15px 36px; font-size:17px; font-weight:600; min-height:54px;
+    display:inline-flex; align-items:center;
+  }
+  .menu__cta::after{ display:none; }
+  .nav .mark,.nav__r,.lng,.brg{ position:relative; z-index:3; }
+
+  .hero{ padding-block:130px 120px; min-height:auto; }
+  .hero__scrim{ background:linear-gradient(to top, rgba(247,246,243,.97) 30%, rgba(247,246,243,.8) 62%, rgba(247,246,243,.4) 100%) !important; }
+  .tally__in{ grid-template-columns:minmax(0,1fr); gap:28px; }
+  .amounts{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+
+  .dock{
+    display:flex; position:fixed; inset-inline:0; bottom:0; z-index:890;
+    padding:10px var(--pad) calc(10px + env(safe-area-inset-bottom));
+    background:rgba(247,246,243,.95); border-top:1px solid var(--line);
+    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  }
+  .dock__go{
+    flex:1; min-height:54px; display:grid; place-items:center; border-radius:99px;
+    background:var(--deep); color:#fff; font-size:16.5px; font-weight:600;
+  }
+  body{ --dock: 76px; }
+
+  .ft__nav a,.credit a{ display:inline-block; padding-block:10px; }
+  .mark{ min-height:44px; }
+  .lng{ min-height:44px; height:44px; }
+}
+@media (max-width:520px){
+  .amounts{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+  html{ scroll-behavior:auto; }
+  .rv{ opacity:1; transform:none; }
+  .hero__h .wm > i{ transform:none; }
+}
+
+/* the mockup bar's dismiss control still needs a real tap area */
+.mockbar button{ width:44px; height:44px; display:grid; place-items:center; }
