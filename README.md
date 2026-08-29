@@ -87,10 +87,15 @@ sees the card form — that is Moyasar's behaviour, not a bug.
 The striped bar at the top (`#mockbar`) says the page is a mockup. Delete
 that element and its CSS when the site goes live.
 
-### 5. `noindex`
+The `noindex` meta tag has been removed, so **search engines can index
+this page now, placeholders and all**. That is fine for a page about to
+launch; it is not fine for one that will sit unfinished for months, since
+Google may cache `اسم الجمعية` and the invented campaign totals. Either
+finish §1 and §2 soon or put the tag back:
 
-`<meta name="robots" content="noindex, nofollow">` keeps the mockup out of
-search results. Remove it on launch.
+```html
+<meta name="robots" content="noindex, nofollow">
+```
 
 ## What already works
 
@@ -117,6 +122,7 @@ search results. Remove it on launch.
   separate `max-width` under `html[lang="ar"]`.
 - The nav offsets itself by `--bar`, measured from the mockup banner at
   runtime, so removing the banner needs no other change.
-- Images are AI-generated placeholders with no identifiable faces.
-  Replace with real photographs of the charity's own work, and get
+- `handoff.jpg` is the image Ahmed supplied. The hero (`hands.jpg`) is
+  still an AI-generated placeholder. Neither shows an identifiable face.
+  Both should become real photographs of the charity's own work, with
   consent from anyone recognisable in them.

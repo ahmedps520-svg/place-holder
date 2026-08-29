@@ -66,6 +66,11 @@
       var v = el.getAttribute(lang === 'ar' ? 'data-ar' : 'data-en');
       if (v != null) el.innerHTML = v;
     });
+    /* alt is an attribute, not content — the innerHTML swap above misses it */
+    $$('[data-alt-en]').forEach(function (el) {
+      var v = el.getAttribute(lang === 'ar' ? 'data-alt-ar' : 'data-alt-en');
+      if (v != null) el.setAttribute('alt', v);
+    });
     if (lngTx) lngTx.textContent = lang === 'ar' ? 'EN' : 'ع';
     document.title = lang === 'ar'
       ? 'سقيا — نموذج موقع جمعية خيرية لتوفير المياه'
