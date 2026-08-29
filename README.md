@@ -24,8 +24,7 @@ Everything in `class="ph-num"` is invented for the mockup:
 |---|---|---|
 | Campaign goal bar | 31,400 of 50,000 SAR (`GOAL_RAISED` / `GOAL_TARGET` in `main.js`) | Real campaign totals, or delete the bar |
 | Cost per bottle | 0.44 SAR (`SAR_PER_BOTTLE` in `main.js`) | The price the charity's supplier actually charges |
-| Registration no. | ٠٠٠٠٠٠ | Real number from the licensing authority |
-| Contact email | hello@example.org | Real address |
+| Licence no. (footer) | ٠٠٠٠٠٠ | Real number from the licensing authority |
 
 **On the cost figure.** The earlier version of this page claimed 1 SAR
 buys 10 litres. It doesn't, anywhere. A 48-bottle carton of 200 ml
@@ -109,6 +108,12 @@ finish §1 and §2 soon or put the tag back:
   hide-on-scroll nav, sticky donate bar on mobile
 - No framework, no build step, no dependencies
 
+## Gap to close
+
+The transparency section was removed, and it held the only contact address
+on the page. **There is now no way for anyone to reach the charity from
+this site** — no email, no phone, no form. Add one before launch.
+
 ## Notes for whoever edits this
 
 - Moyasar takes amounts in **halalas**, not riyals — `main.js` multiplies
@@ -122,7 +127,10 @@ finish §1 and §2 soon or put the tag back:
   separate `max-width` under `html[lang="ar"]`.
 - The nav offsets itself by `--bar`, measured from the mockup banner at
   runtime, so removing the banner needs no other change.
-- `handoff.jpg` is the image Ahmed supplied. The hero (`hands.jpg`) is
-  still an AI-generated placeholder. Neither shows an identifiable face.
-  Both should become real photographs of the charity's own work, with
-  consent from anyone recognisable in them.
+- `hero.jpg` and `handoff.jpg` are both images Ahmed supplied. Neither
+  shows an identifiable face. They should still become real photographs of
+  the charity's own work, with consent from anyone recognisable in them —
+  and a child in a real photo needs a guardian's consent, not the child's.
+- The hero photo is taller in ratio than a phone viewport, so it crops
+  sideways there and `object-position` has no vertical travel. The scrim
+  does the work instead; see the comment on `.hero__scrim`.

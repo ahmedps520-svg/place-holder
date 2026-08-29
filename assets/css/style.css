@@ -68,7 +68,6 @@ ul,ol,dl{ margin:0; padding:0; list-style:none; }
 .rv{ opacity:0; transform:translateY(26px); transition:opacity .95s var(--e), transform .95s var(--e); transition-delay:var(--d,0s); }
 .rv.in{ opacity:1; transform:none; }
 .flow .fl:nth-child(2){ --d:.08s } .flow .fl:nth-child(3){ --d:.16s } .flow .fl:nth-child(4){ --d:.24s }
-.cards .card:nth-child(2){ --d:.09s } .cards .card:nth-child(3){ --d:.18s }
 
 /* every unfilled slot is visibly a slot, so nothing invented ships by accident */
 .ph{ border-bottom:1.5px dashed var(--amber); background:var(--amber-l); border-radius:2px; padding-inline:3px; }
@@ -162,11 +161,22 @@ html[lang="en"] .menu a{ font-size:13.5px; }
   width:100%; height:100%; object-fit:cover; object-position:center 42%;
   opacity:0; transform:scale(1.07); transition:opacity 1.5s var(--e), transform 2.6s var(--e);
 }
-.hero__media img.seen{ opacity:.46; transform:none; }
+.hero__media img.seen{ opacity:.52; transform:none; }
+/* On a phone the photo is taller than the frame in ratio, so it crops
+   sideways and there is no vertical room to move the hand-off clear of the
+   headline. The scrim therefore has to carry both: heavy across the bottom
+   half where every line of text sits, lighter through the middle band so the
+   bottle still reads behind it. Measured worst case (white text over the
+   brightest part of the thobe) is ~8.8:1. */
 .hero__scrim{
   position:absolute; inset:0;
   background:
-    linear-gradient(to top, var(--abyss) 4%, rgba(4,34,42,.82) 40%, rgba(4,34,42,.5) 72%, rgba(4,34,42,.7) 100%),
+    linear-gradient(to top,
+      var(--abyss) 5%,
+      rgba(4,34,42,.88) 34%,
+      rgba(4,34,42,.58) 62%,
+      rgba(4,34,42,.5) 84%,
+      rgba(4,34,42,.62) 100%),
     radial-gradient(70% 50% at 50% 0%, rgba(35,167,189,.2), transparent 70%);
 }
 
@@ -324,11 +334,6 @@ html[lang="ar"] .pull p{ font-family:var(--ff-d); font-style:normal; font-weight
 .fl p{ font-size:14.5px; color:var(--ink-2); }
 
 /* ---------- 11. TRUST ---------- */
-.trust{ background:var(--sand); border-block:1px solid var(--line); }
-.cards{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
-.card{ background:var(--paper-2); border:1px solid var(--line); border-radius:16px; padding:clamp(22px,3vw,30px); }
-.card h3{ font-size:1.08rem; margin-bottom:8px; }
-.card p{ font-size:14.5px; color:var(--ink-2); }
 
 /* ---------- 12. FINAL ---------- */
 .final{
@@ -361,7 +366,6 @@ html[lang="ar"] .pull p{ font-family:var(--ff-d); font-style:normal; font-weight
   .give__in,.split{ grid-template-columns:minmax(0,1fr); }
   .split__pic{ max-width:520px; margin-inline:auto; aspect-ratio:3/2; }
   .flow{ grid-template-columns:repeat(2,minmax(0,1fr)); }
-  .cards{ grid-template-columns:minmax(0,1fr); }
   .viz__grid{ max-width:none; }
 }
 @media (max-width:860px){
