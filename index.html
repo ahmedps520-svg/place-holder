@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#F7F6F3">
+<meta name="theme-color" content="#04222A">
 <title>سقيا — نموذج موقع جمعية خيرية لتوفير المياه</title>
 <meta name="description" content="نموذج تصميم لموقع جمعية خيرية تُعنى بسقيا الماء. جميع الأسماء والأرقام في هذه الصفحة نموذجية وتُستبدل بالبيانات الحقيقية.">
 <meta name="robots" content="noindex, nofollow">
@@ -18,7 +18,7 @@
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="assets/img/hands.jpg">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -27,36 +27,24 @@
 
 <!--
   ══════════════════════════════════════════════════════════
-  MOCKUP — read before this goes anywhere near a real donor.
+  MOCKUP — read before this goes near a real donor.
 
-  1. NAME.  Every place the organisation's name appears is
-     marked class="ph" and reads "اسم الجمعية". Find and
-     replace those, then delete the .ph styling.
-
-  2. NUMBERS.  Everything inside class="ph-num" is a made-up
-     illustrative figure. A charity publishing invented impact
-     numbers is a serious problem — replace every one with a
-     real audited figure or delete the block.
-
-  3. APPLE PAY.  The button is deliberately inert. Apple Pay
-     cannot work from static HTML: it needs a payment provider
-     (Moyasar / Tap / Checkout.com / Stripe), a verified
-     merchant domain, and a server to validate the session.
-     See README.md.
-
-  4. LICENCE.  Saudi charities must display their registration
-     number. The placeholder is in the footer.
+  1. NAME     — every class="ph" slot reads اسم الجمعية.
+  2. NUMBERS  — every class="ph-num" figure is invented.
+  3. RATE     — SAR_PER_BOTTLE in main.js is based on a real
+                retail carton price. Replace with the price the
+                charity actually pays its supplier.
+  4. PAYMENT  — Moyasar form loads only when a publishable key
+                is set in main.js. Until then the panel says so.
   ══════════════════════════════════════════════════════════
 -->
 
-<span class="wash" aria-hidden="true"></span>
-<div class="prog" aria-hidden="true"><i id="progFill"></i></div>
-
-<!-- mockup banner — delete this whole element when the site goes live -->
 <div class="mockbar" id="mockbar">
   <span data-en="Design mockup — names and figures are placeholders" data-ar="نموذج تصميم — الأسماء والأرقام غير حقيقية">نموذج تصميم — الأسماء والأرقام غير حقيقية</span>
   <button id="mockClose" aria-label="إخفاء">&times;</button>
 </div>
+
+<div class="prog" aria-hidden="true"><i id="progFill"></i></div>
 
 <!-- ══════════ NAV ══════════ -->
 <header class="nav" id="nav">
@@ -72,10 +60,9 @@
     </a>
 
     <nav class="menu" id="menu" aria-label="Main">
-      <a href="#top" data-en="Home" data-ar="الرئيسية">الرئيسية</a>
-      <a href="#how" data-en="How it works" data-ar="كيف نعمل">كيف نعمل</a>
       <a href="#give" data-en="Donate" data-ar="تبرّع">تبرّع</a>
-      <a href="#where" data-en="Where it goes" data-ar="أين تذهب">أين تذهب</a>
+      <a href="#need" data-en="The need" data-ar="الحاجة">الحاجة</a>
+      <a href="#work" data-en="Our work" data-ar="عملنا">عملنا</a>
       <a href="#trust" data-en="Transparency" data-ar="الشفافية">الشفافية</a>
       <a class="menu__cta" href="#give" data-en="Donate now" data-ar="تبرّع الآن">تبرّع الآن</a>
     </nav>
@@ -99,166 +86,172 @@
     <span class="hero__scrim"></span>
   </div>
 
+  <!-- water that rises as the page is read -->
+  <div class="rise" id="rise" aria-hidden="true">
+    <svg class="rise__wave" viewBox="0 0 1440 120" preserveAspectRatio="none">
+      <path d="M0 60 C180 20 320 96 520 70 C720 44 860 98 1060 74 C1220 55 1330 76 1440 58 L1440 120 L0 120 Z"/>
+    </svg>
+    <span class="rise__body"></span>
+  </div>
+
   <div class="wrp hero__in">
     <p class="eyb">
       <span class="drop" aria-hidden="true"></span>
-      <span data-en="A drop of water, a lasting charity" data-ar="سقيا الماء — صدقة جارية">سقيا الماء — صدقة جارية</span>
+      <span data-en="Water is a lasting charity" data-ar="سقيا الماء — صدقة جارية">سقيا الماء — صدقة جارية</span>
     </p>
 
     <h1 class="hero__h" id="heroH"
-        data-en="Clean water, to whoever needs it."
-        data-ar="ماء نظيف، لمن يحتاجه.">ماء نظيف، لمن يحتاجه.</h1>
+        data-en="Thirst does not wait."
+        data-ar="العطش لا ينتظر.">العطش لا ينتظر.</h1>
 
     <p class="hero__p"
-       data-en="Give once, and it keeps reaching people long after you have forgotten you gave."
-       data-ar="تبرّع مرة واحدة، ويظل أثرها يصل إلى الناس بعد أن تنسى أنك تبرّعت.">تبرّع مرة واحدة، ويظل أثرها يصل إلى الناس بعد أن تنسى أنك تبرّعت.</p>
+       data-en="It takes less than a minute and about the price of a coffee. The water goes out this week."
+       data-ar="أقل من دقيقة، وبثمن فنجان قهوة تقريباً. والماء يخرج هذا الأسبوع.">أقل من دقيقة، وبثمن فنجان قهوة تقريباً. والماء يخرج هذا الأسبوع.</p>
 
     <div class="hero__act">
       <a class="btn btn--go btn--lg" href="#give">
         <span data-en="Donate now" data-ar="تبرّع الآن">تبرّع الآن</span>
         <svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
-      <a class="btn btn--soft btn--lg" href="#how">
-        <span data-en="How it works" data-ar="كيف نعمل">كيف نعمل</span>
+      <a class="btn btn--ghost btn--lg" href="#need">
+        <span data-en="Why it matters" data-ar="لماذا يهم">لماذا يهم</span>
       </a>
     </div>
-  </div>
 
-  <svg class="wave" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0 46 C180 6 320 82 520 56 C720 30 860 84 1060 60 C1220 41 1330 62 1440 44 L1440 90 L0 90 Z"/>
-  </svg>
-</section>
-
-<!-- ══════════ COUNTERS ══════════ -->
-<section class="tally">
-  <div class="wrp tally__in">
-    <div class="tal rv">
-      <b class="ph-num" data-count="1250000">٠</b>
-      <span data-en="litres delivered" data-ar="لتر تم توصيلها">لتر تم توصيلها</span>
+    <!-- campaign momentum -->
+    <div class="goal">
+      <div class="goal__row">
+        <span><b class="ph-num" id="goalNow">٠</b> <span data-en="SAR raised" data-ar="ريال جُمعت">ريال جُمعت</span></span>
+        <span class="goal__t"><span data-en="Goal" data-ar="الهدف">الهدف</span> <b class="ph-num">٥٠٬٠٠٠</b></span>
+      </div>
+      <div class="goal__bar"><i id="goalBar"></i></div>
+      <p class="goal__n ph-num" data-en="Illustrative campaign figures — replace with real ones."
+         data-ar="أرقام حملة توضيحية — تُستبدل بأرقام حقيقية.">أرقام حملة توضيحية — تُستبدل بأرقام حقيقية.</p>
     </div>
-    <div class="tal rv">
-      <b class="ph-num" data-count="38">٠</b>
-      <span data-en="communities reached" data-ar="حيّاً ومجتمعاً">حيّاً ومجتمعاً</span>
-    </div>
-    <div class="tal rv">
-      <b class="ph-num" data-count="100">٠</b><em>%</em>
-      <span data-en="of donations go to water" data-ar="من التبرعات تذهب للماء">من التبرعات تذهب للماء</span>
-    </div>
-  </div>
-  <p class="wrp tally__note" data-en="Illustrative figures for this mockup — replace with audited numbers."
-     data-ar="أرقام توضيحية في هذا النموذج فقط — تُستبدل بأرقام حقيقية مدققة.">أرقام توضيحية في هذا النموذج فقط — تُستبدل بأرقام حقيقية مدققة.</p>
-</section>
-
-<!-- ══════════ HOW ══════════ -->
-<section class="sec how" id="how">
-  <div class="wrp">
-    <header class="hd rv">
-      <p class="kick" data-en="How it works" data-ar="كيف نعمل">كيف نعمل</p>
-      <h2 class="h2" data-en="Three steps. Nothing in between."
-          data-ar="ثلاث خطوات، ولا شيء بينها.">ثلاث خطوات، ولا شيء بينها.</h2>
-    </header>
-
-    <ol class="steps">
-      <li class="step rv">
-        <span class="step__n">١</span>
-        <h3 data-en="You give" data-ar="أنت تتبرّع">أنت تتبرّع</h3>
-        <p data-en="Any amount, in seconds, from your phone."
-           data-ar="أي مبلغ، في ثوانٍ، من جوالك.">أي مبلغ، في ثوانٍ، من جوالك.</p>
-      </li>
-      <li class="step rv">
-        <span class="step__n">٢</span>
-        <h3 data-en="We deliver" data-ar="نحن نوصّل">نحن نوصّل</h3>
-        <p data-en="Water is bought and taken to the neighbourhoods that asked for it."
-           data-ar="يُشترى الماء ويُنقل إلى الأحياء التي طلبته.">يُشترى الماء ويُنقل إلى الأحياء التي طلبته.</p>
-      </li>
-      <li class="step rv">
-        <span class="step__n">٣</span>
-        <h3 data-en="You see it" data-ar="وتطّلع على الأثر">وتطّلع على الأثر</h3>
-        <p data-en="Every delivery is documented and published here."
-           data-ar="كل عملية توصيل تُوثَّق وتُنشر هنا.">كل عملية توصيل تُوثَّق وتُنشر هنا.</p>
-      </li>
-    </ol>
   </div>
 </section>
 
-<!-- ══════════ DONATE ══════════ -->
+<!-- ══════════ DONATE (high on the page on purpose) ══════════ -->
 <section class="sec give" id="give">
-  <div class="wrp">
-    <header class="hd hd--c rv">
+  <div class="wrp give__in">
+
+    <div class="give__l rv">
       <p class="kick" data-en="Donate" data-ar="تبرّع">تبرّع</p>
-      <h2 class="h2" data-en="Choose an amount." data-ar="اختر المبلغ.">اختر المبلغ.</h2>
-    </header>
+      <h2 class="h2" data-en="Pick a number. See exactly what it buys."
+          data-ar="اختر رقماً. وشاهد ما الذي يشتريه بالضبط.">اختر رقماً. وشاهد ما الذي يشتريه بالضبط.</h2>
+      <p class="give__p"
+         data-en="No percentages, no vague promises. Every riyal here is counted in bottles of drinking water."
+         data-ar="بلا نِسب، وبلا وعود غامضة. كل ريال هنا محسوب بعبوات ماء شرب.">بلا نِسب، وبلا وعود غامضة. كل ريال هنا محسوب بعبوات ماء شرب.</p>
+
+      <!-- the abstract number, made physical -->
+      <div class="viz" aria-hidden="true">
+        <div class="viz__grid" id="vizGrid"></div>
+        <span class="viz__more" id="vizMore"></span>
+      </div>
+    </div>
 
     <div class="panel rv">
-      <!-- amount chips -->
       <div class="amounts" id="amounts" role="group" aria-label="مبلغ التبرع">
-        <button type="button" class="amt" data-amt="20">٢٠</button>
-        <button type="button" class="amt is-on" data-amt="50">٥٠</button>
-        <button type="button" class="amt" data-amt="100">١٠٠</button>
-        <button type="button" class="amt" data-amt="250">٢٥٠</button>
-        <button type="button" class="amt" data-amt="500">٥٠٠</button>
+        <button type="button" class="amt" data-amt="20"><b>٢٠</b><i data-en="SAR" data-ar="ريال">ريال</i></button>
+        <button type="button" class="amt is-on" data-amt="50"><b>٥٠</b><i data-en="SAR" data-ar="ريال">ريال</i></button>
+        <button type="button" class="amt" data-amt="100"><b>١٠٠</b><i data-en="SAR" data-ar="ريال">ريال</i></button>
+        <button type="button" class="amt" data-amt="250"><b>٢٥٠</b><i data-en="SAR" data-ar="ريال">ريال</i></button>
+        <button type="button" class="amt" data-amt="500"><b>٥٠٠</b><i data-en="SAR" data-ar="ريال">ريال</i></button>
+        <button type="button" class="amt" data-amt="1000"><b>١٠٠٠</b><i data-en="SAR" data-ar="ريال">ريال</i></button>
       </div>
 
       <label class="custom">
-        <span data-en="Or another amount" data-ar="أو مبلغ آخر">أو مبلغ آخر</span>
+        <span data-en="Or enter your own amount" data-ar="أو اكتب مبلغك">أو اكتب مبلغك</span>
         <span class="custom__f">
           <input type="number" id="customAmt" min="1" step="1" inputmode="numeric" placeholder="0" aria-label="مبلغ مخصص">
           <em data-en="SAR" data-ar="ريال">ريال</em>
         </span>
       </label>
 
-      <!-- impact readout, driven by the amount above -->
       <div class="impact" aria-live="polite">
-        <span class="impact__l" data-en="Roughly provides" data-ar="توفّر تقريباً">توفّر تقريباً</span>
-        <b><span id="litres">٥٠٠</span> <span data-en="litres of clean water" data-ar="لتراً من الماء النظيف">لتراً من الماء النظيف</span></b>
-        <i class="ph-num" data-en="Rate used in this mockup: 10 litres per 1 SAR — set your real rate."
-           data-ar="النسبة المستخدمة في هذا النموذج: ١٠ لترات لكل ريال — عدّلها بالنسبة الحقيقية.">النسبة المستخدمة في هذا النموذج: ١٠ لترات لكل ريال — عدّلها بالنسبة الحقيقية.</i>
+        <b><span id="bottles">١١٠</span> <span data-en="bottles of drinking water" data-ar="عبوة ماء شرب">عبوة ماء شرب</span></b>
+        <span class="impact__s"><span id="litres">٢٢</span> <span data-en="litres · 200 ml each" data-ar="لتراً · ٢٠٠ مل للعبوة">لتراً · ٢٠٠ مل للعبوة</span></span>
+        <i class="ph-num"
+           data-en="Based on a 48-bottle carton at about 21 SAR. Set the price your supplier actually charges."
+           data-ar="محسوبة على كرتون ٤٨ عبوة بنحو ٢١ ريالاً. اضبطها على السعر الذي يمنحك إياه المورّد فعلاً.">محسوبة على كرتون ٤٨ عبوة بنحو ٢١ ريالاً. اضبطها على السعر الذي يمنحك إياه المورّد فعلاً.</i>
       </div>
 
-      <!-- payment -->
-      <div class="pay">
-        <button class="applepay" id="applePay" type="button" aria-describedby="payNote">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.05 12.54c-.02-2.02 1.65-2.99 1.72-3.04-.94-1.37-2.4-1.56-2.92-1.58-1.24-.13-2.42.73-3.05.73-.63 0-1.6-.71-2.63-.69-1.35.02-2.6.79-3.29 2-1.4 2.43-.36 6.03 1.01 8 .67.96 1.47 2.04 2.52 2 1.01-.04 1.39-.65 2.62-.65 1.22 0 1.57.65 2.64.63 1.09-.02 1.78-.98 2.45-1.95.77-1.12 1.09-2.2 1.11-2.26-.02-.01-2.13-.82-2.15-3.25zM15.1 6.35c.56-.68.94-1.62.83-2.56-.81.03-1.79.54-2.36 1.21-.51.6-.96 1.56-.84 2.48.9.07 1.82-.46 2.37-1.13z"/></svg>
-          <span>Pay</span>
-        </button>
-        <p class="paynote" id="payNote">
-          <span data-en="Not connected yet. Apple Pay needs a payment provider and a verified domain — see README."
-                data-ar="غير مفعّل بعد. تحتاج Apple Pay إلى مزوّد دفع ونطاق موثّق — انظر ملف README.">غير مفعّل بعد. تحتاج Apple Pay إلى مزوّد دفع ونطاق موثّق — انظر ملف README.</span>
-        </p>
+      <!-- Moyasar mounts here once a publishable key exists -->
+      <div id="moyasarForm" class="mysr-form"></div>
 
-        <div class="alts">
-          <span class="alts__l" data-en="Other ways to give" data-ar="طرق أخرى للتبرّع">طرق أخرى للتبرّع</span>
-          <div class="alts__row">
-            <span class="alt ph" data-en="Bank transfer — IBAN" data-ar="تحويل بنكي — الآيبان">تحويل بنكي — الآيبان</span>
-            <span class="alt ph" data-en="STC Pay" data-ar="STC Pay">STC Pay</span>
-            <span class="alt ph" data-en="SMS donation" data-ar="التبرع بالرسائل">التبرع بالرسائل</span>
-          </div>
+      <div class="paygate" id="payGate">
+        <p>
+          <b data-en="Payment not connected yet" data-ar="الدفع غير مربوط بعد">الدفع غير مربوط بعد</b>
+          <span data-en="Add your Moyasar publishable key in main.js and the card and Apple Pay form appears right here."
+                data-ar="أضف مفتاح Moyasar العام في ملف main.js وستظهر هنا مباشرةً واجهة البطاقة و Apple Pay.">أضف مفتاح Moyasar العام في ملف main.js وستظهر هنا مباشرةً واجهة البطاقة و Apple Pay.</span>
+        </p>
+        <div class="paygate__logos" aria-hidden="true">
+          <span>mada</span><span>VISA</span><span>Mastercard</span><span>&#63743; Pay</span>
         </div>
+      </div>
+
+      <p class="safe">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8 3.5v6c0 5-3.4 9.3-8 10.5-4.6-1.2-8-5.5-8-10.5v-6z" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8.6 12.2l2.3 2.3 4.5-4.6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        <span data-en="Processed by Moyasar. Card details never touch this site."
+              data-ar="المعالجة عبر Moyasar. بيانات بطاقتك لا تمر عبر هذا الموقع.">المعالجة عبر Moyasar. بيانات بطاقتك لا تمر عبر هذا الموقع.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ THE NEED ══════════ -->
+<section class="sec need" id="need">
+  <div class="wrp">
+    <blockquote class="pull rv">
+      <p data-en="A bottle of water costs less than half a riyal. Going without it costs a great deal more."
+         data-ar="عبوة الماء تكلّف أقل من نصف ريال. وأما الاستغناء عنها فيكلّف أضعافاً مضاعفة.">عبوة الماء تكلّف أقل من نصف ريال. وأما الاستغناء عنها فيكلّف أضعافاً مضاعفة.</p>
+    </blockquote>
+
+    <div class="split">
+      <figure class="split__pic rv">
+        <img src="assets/img/supply.jpg" alt="" loading="lazy">
+      </figure>
+      <div class="split__tx rv">
+        <p class="kick" data-en="Who it reaches" data-ar="من تصل إليه">من تصل إليه</p>
+        <h2 class="h2" data-en="Workers, mosques, and families in the heat."
+            data-ar="عمّال، ومساجد، وأسر تحت الحرّ.">عمّال، ومساجد، وأسر تحت الحرّ.</h2>
+        <p class="split__p ph"
+           data-en="[Describe here, in two or three plain sentences, exactly who the charity serves and where. Specific beats general — a named district lands harder than a region.]"
+           data-ar="[اكتب هنا، في جملتين أو ثلاث بلغة بسيطة، من الذي تخدمه الجمعية وأين بالضبط. التحديد أقوى من العموم — ذكر اسم الحي يقع في النفس أشد من ذكر المنطقة.]">[اكتب هنا، في جملتين أو ثلاث بلغة بسيطة، من الذي تخدمه الجمعية وأين بالضبط. التحديد أقوى من العموم — ذكر اسم الحي يقع في النفس أشد من ذكر المنطقة.]</p>
+
+        <ul class="ticks">
+          <li data-en="Sealed, tested drinking water" data-ar="مياه شرب مختومة ومفحوصة">مياه شرب مختومة ومفحوصة</li>
+          <li data-en="Delivered where it was asked for" data-ar="تُوصَّل حيث طُلبت">تُوصَّل حيث طُلبت</li>
+          <li data-en="Every delivery photographed and logged" data-ar="كل توصيلة مصوّرة وموثّقة">كل توصيلة مصوّرة وموثّقة</li>
+        </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════ WHERE ══════════ -->
-<section class="sec where" id="where">
-  <div class="wrp where__in">
-    <div class="where__tx rv">
-      <p class="kick" data-en="Where it goes" data-ar="أين تذهب">أين تذهب</p>
-      <h2 class="h2" data-en="Water, and only water." data-ar="ماء، ولا شيء غير الماء.">ماء، ولا شيء غير الماء.</h2>
-      <p class="where__p"
-         data-en="Every riyal is spent on buying, treating and moving clean water. Running costs are covered separately so donations are not spent on us."
-         data-ar="كل ريال يُصرف على شراء الماء ومعالجته ونقله. أما المصاريف التشغيلية فتُغطّى من مصدر منفصل حتى لا تُصرف تبرعاتكم علينا.">كل ريال يُصرف على شراء الماء ومعالجته ونقله. أما المصاريف التشغيلية فتُغطّى من مصدر منفصل حتى لا تُصرف تبرعاتكم علينا.</p>
+<!-- ══════════ WORK ══════════ -->
+<section class="sec work" id="work">
+  <div class="wrp">
+    <header class="hd hd--c rv">
+      <p class="kick" data-en="Our work" data-ar="عملنا">عملنا</p>
+      <h2 class="h2" data-en="From your phone to someone's hands."
+          data-ar="من جوالك إلى يد إنسان.">من جوالك إلى يد إنسان.</h2>
+    </header>
 
-      <ul class="ticks">
-        <li data-en="Sealed, tested drinking water" data-ar="مياه شرب مختومة ومفحوصة">مياه شرب مختومة ومفحوصة</li>
-        <li data-en="Delivered to neighbourhoods that requested it" data-ar="تُوصَّل للأحياء التي طلبتها">تُوصَّل للأحياء التي طلبتها</li>
-        <li data-en="Every delivery photographed and logged" data-ar="كل عملية توصيل مصوّرة وموثّقة">كل عملية توصيل مصوّرة وموثّقة</li>
-      </ul>
-    </div>
-
-    <figure class="where__pic rv">
-      <img src="assets/img/supply.jpg" alt="" loading="lazy">
-    </figure>
+    <ol class="flow">
+      <li class="fl rv"><span class="fl__n">١</span>
+        <h3 data-en="You give" data-ar="تتبرّع">تتبرّع</h3>
+        <p data-en="Any amount, in seconds." data-ar="أي مبلغ، في ثوانٍ.">أي مبلغ، في ثوانٍ.</p></li>
+      <li class="fl rv"><span class="fl__n">٢</span>
+        <h3 data-en="We buy" data-ar="نشتري">نشتري</h3>
+        <p data-en="Water bought in bulk, at the price shown above." data-ar="ماء يُشترى بالجملة، بالسعر الموضّح أعلاه.">ماء يُشترى بالجملة، بالسعر الموضّح أعلاه.</p></li>
+      <li class="fl rv"><span class="fl__n">٣</span>
+        <h3 data-en="We deliver" data-ar="نوصّل">نوصّل</h3>
+        <p data-en="Straight to the places that asked." data-ar="مباشرة إلى الأماكن التي طلبت.">مباشرة إلى الأماكن التي طلبت.</p></li>
+      <li class="fl rv"><span class="fl__n">٤</span>
+        <h3 data-en="You see it" data-ar="وترى الأثر">وترى الأثر</h3>
+        <p data-en="Photos and totals published here." data-ar="صور وأرقام تُنشر هنا.">صور وأرقام تُنشر هنا.</p></li>
+    </ol>
   </div>
 </section>
 
@@ -267,24 +260,23 @@
   <div class="wrp">
     <header class="hd hd--c rv">
       <p class="kick" data-en="Transparency" data-ar="الشفافية">الشفافية</p>
-      <h2 class="h2" data-en="You should be able to check us."
-          data-ar="من حقك أن تتحقّق منّا.">من حقك أن تتحقّق منّا.</h2>
+      <h2 class="h2" data-en="Check us before you trust us."
+          data-ar="تحقّق منّا قبل أن تثق بنا.">تحقّق منّا قبل أن تثق بنا.</h2>
     </header>
 
     <div class="cards">
       <article class="card rv">
-        <h3 data-en="Licensed and registered" data-ar="مرخّصة ومسجّلة">مرخّصة ومسجّلة</h3>
-        <p><span data-en="Registration number" data-ar="رقم التسجيل">رقم التسجيل</span>
-          <b class="ph">٠٠٠٠٠٠</b></p>
+        <h3 data-en="Licensed" data-ar="مرخّصة">مرخّصة</h3>
+        <p><span data-en="Registration number" data-ar="رقم التسجيل">رقم التسجيل</span> <b class="ph">٠٠٠٠٠٠</b></p>
       </article>
       <article class="card rv">
         <h3 data-en="Published accounts" data-ar="حسابات منشورة">حسابات منشورة</h3>
-        <p data-en="Annual report and spending breakdown, published here each year."
-           data-ar="التقرير السنوي وتفصيل الصرف، يُنشران هنا كل عام.">التقرير السنوي وتفصيل الصرف، يُنشران هنا كل عام.</p>
+        <p data-en="Annual report and spending breakdown, published here."
+           data-ar="التقرير السنوي وتفصيل الصرف، يُنشران هنا.">التقرير السنوي وتفصيل الصرف، يُنشران هنا.</p>
       </article>
       <article class="card rv">
-        <h3 data-en="Ask us anything" data-ar="اسألنا عن أي شيء">اسألنا عن أي شيء</h3>
-        <p><span class="ph" data-en="hello@example.org" data-ar="hello@example.org">hello@example.org</span></p>
+        <h3 data-en="Ask us anything" data-ar="اسألنا">اسألنا</h3>
+        <p><span class="ph">hello@example.org</span></p>
       </article>
     </div>
   </div>
@@ -293,7 +285,10 @@
 <!-- ══════════ FINAL ══════════ -->
 <section class="final">
   <div class="wrp final__in rv">
-    <h2 class="final__h" data-en="Someone is thirsty right now." data-ar="هناك من هو عطشان الآن.">هناك من هو عطشان الآن.</h2>
+    <h2 class="final__h" data-en="Someone is thirsty right now."
+        data-ar="هناك من هو عطشان الآن.">هناك من هو عطشان الآن.</h2>
+    <p class="final__p" data-en="It costs you less than lunch."
+       data-ar="وهي تكلّفك أقل من وجبة غداء.">وهي تكلّفك أقل من وجبة غداء.</p>
     <a class="btn btn--go btn--xl" href="#give">
       <span data-en="Donate now" data-ar="تبرّع الآن">تبرّع الآن</span>
     </a>
@@ -316,25 +311,25 @@
     </a>
 
     <nav class="ft__nav">
-      <a href="#how" data-en="How it works" data-ar="كيف نعمل">كيف نعمل</a>
       <a href="#give" data-en="Donate" data-ar="تبرّع">تبرّع</a>
-      <a href="#where" data-en="Where it goes" data-ar="أين تذهب">أين تذهب</a>
+      <a href="#need" data-en="The need" data-ar="الحاجة">الحاجة</a>
+      <a href="#work" data-en="Our work" data-ar="عملنا">عملنا</a>
       <a href="#trust" data-en="Transparency" data-ar="الشفافية">الشفافية</a>
     </nav>
 
     <p class="ft__lic">
-      <span data-en="Licence no." data-ar="رقم الترخيص">رقم الترخيص</span>
-      <b class="ph">٠٠٠٠٠٠</b>
+      <span data-en="Licence no." data-ar="رقم الترخيص">رقم الترخيص</span> <b class="ph">٠٠٠٠٠٠</b>
     </p>
 
     <div class="ft__end">
-      <span class="ph" data-en="© 2026 [organisation name]" data-ar="© ٢٠٢٦ [اسم الجمعية]">© ٢٠٢٦ [اسم الجمعية]</span>
+      <span class="ph">© ٢٠٢٦ [اسم الجمعية]</span>
       <span class="credit" data-en='Developed by <a href="https://mamar.site" target="_blank" rel="noopener">Mamar</a>' data-ar='تطوير <a href="https://mamar.site" target="_blank" rel="noopener">ممر</a>'>تطوير <a href="https://mamar.site" target="_blank" rel="noopener">ممر</a></span>
     </div>
   </div>
 </footer>
 
 <div class="dock" id="dock">
+  <span class="dock__l"><b id="dockAmt">٥٠</b> <span data-en="SAR" data-ar="ريال">ريال</span></span>
   <a class="dock__go" href="#give">
     <span data-en="Donate now" data-ar="تبرّع الآن">تبرّع الآن</span>
   </a>

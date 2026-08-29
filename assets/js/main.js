@@ -1,10 +1,11 @@
 /* ==========================================================
    WATER CHARITY — design mockup
-   No dependencies. Arabic ships in the markup; EN is the toggle.
+   No dependencies of its own. Arabic ships in the markup.
 
-   The donation panel is a working *interface* over a payment
-   system that does not exist yet. Nothing here takes money,
-   and the Apple Pay button is deliberately inert.
+   PAYMENT: set MOYASAR_KEY below and the real Moyasar form
+   (card + Apple Pay) mounts into #moyasarForm. While the key
+   is empty, no payment UI is shown at all — a donate button
+   that looks live and takes nothing is worse than none.
    ========================================================== */
 (function () {
   'use strict';
@@ -12,9 +13,22 @@
   var $  = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
 
-  /* Illustrative only. Set this to the organisation's real cost per litre
-     before the page is shown to a donor. */
-  var LITRES_PER_RIYAL = 10;
+  /* ══════════ CONFIG — the two numbers that must be real ══════════ */
+
+  /* Moyasar publishable key, e.g. 'pk_live_...' (or pk_test_ while testing).
+     Publishable keys are safe in frontend code; the secret key never is. */
+  var MOYASAR_KEY = '';
+
+  /* Where the donor lands after paying. Must be a real page you host. */
+  var CALLBACK_URL = window.location.origin + window.location.pathname + '?paid=1';
+
+  /* Cost basis. A 48-bottle carton of 200 ml bottles retails around 21 SAR
+     in Saudi (Berain/Arwa, 2026), so ~0.44 SAR per bottle. A charity buying
+     in bulk should pay less — put the supplier's real price here. */
+  var SAR_PER_BOTTLE = 0.44;
+  var LITRES_PER_BOTTLE = 0.2;
+
+  /* ══════════════════════════════════════════════════════════════ */
 
   var AR_D = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
   function arDig(s) { return String(s).replace(/\d/g, function (d) { return AR_D[+d]; }); }
@@ -23,9 +37,12 @@
     var s = String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     return isAr() ? arDig(s).replace(/,/g, '٬') : s;
   }
+  function fmt1(n) {
+    var s = (Math.round(n * 10) / 10).toString();
+    return isAr() ? arDig(s).replace('.', '٫') : s;
+  }
 
   /* ---------- 1. MOCKUP BAR ---------- */
-  /* keeps the fixed nav clear of the banner without magic numbers */
   var bar = $('#mockbar');
   function sizeBar() {
     document.documentElement.style.setProperty(
@@ -34,10 +51,7 @@
   if (bar) {
     sizeBar();
     window.addEventListener('resize', sizeBar);
-    $('#mockClose').addEventListener('click', function () {
-      bar.classList.add('gone');
-      sizeBar();
-    });
+    $('#mockClose').addEventListener('click', function () { bar.classList.add('gone'); sizeBar(); });
   }
 
   /* ---------- 2. LANGUAGE ---------- */
@@ -56,9 +70,7 @@
     document.title = lang === 'ar'
       ? 'سقيا — نموذج موقع جمعية خيرية لتوفير المياه'
       : 'Water Relief — charity website mockup';
-    paintAmounts();
-    paintImpact();
-    if (tallyState !== 'run') paintTally(1);
+    paintAmounts(); paintImpact(); paintGoal(goalShown);
     splitWords($('#heroH'));
     sizeBar();
   }
@@ -124,28 +136,66 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
   }
 
-  /* ---------- 6. DONATION AMOUNT ---------- */
-  var amountEls = $$('.amt'), customEl = $('#customAmt'), litresEl = $('#litres');
+  /* ---------- 6. AMOUNT + IMPACT ---------- */
+  var amountEls = $$('.amt'), customEl = $('#customAmt');
+  var bottlesEl = $('#bottles'), litresEl = $('#litres'), dockAmt = $('#dockAmt');
+  var vizGrid = $('#vizGrid'), vizMore = $('#vizMore');
   var amount = 50;
+  var VIZ_MAX = 120;
 
-  function paintAmounts() {
-    amountEls.forEach(function (b) {
-      b.textContent = fmt(parseInt(b.getAttribute('data-amt'), 10));
-      b.classList.toggle('is-on', !customHasValue() && parseInt(b.getAttribute('data-amt'), 10) === amount);
-      b.setAttribute('aria-pressed', b.classList.contains('is-on') ? 'true' : 'false');
-    });
-  }
+  function bottlesFor(sar) { return Math.floor(sar / SAR_PER_BOTTLE); }
+
   function customHasValue() {
     return !!(customEl && customEl.value !== '' && parseFloat(customEl.value) > 0);
   }
+
+  function paintAmounts() {
+    amountEls.forEach(function (b) {
+      var v = parseInt(b.getAttribute('data-amt'), 10);
+      var num = b.querySelector('b');
+      if (num) num.textContent = fmt(v);
+      var on = !customHasValue() && v === amount;
+      b.classList.toggle('is-on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    if (dockAmt) dockAmt.textContent = fmt(amount);
+    if (customEl) customEl.placeholder = isAr() ? '٠' : '0';
+  }
+
   function paintImpact() {
-    if (litresEl) litresEl.textContent = fmt(amount * LITRES_PER_RIYAL);
+    var n = bottlesFor(amount);
+    if (bottlesEl) bottlesEl.textContent = fmt(n);
+    if (litresEl) litresEl.textContent = fmt1(n * LITRES_PER_BOTTLE);
+    paintViz(n);
+  }
+
+  /* turn the number into something you can actually see */
+  function paintViz(n) {
+    if (!vizGrid) return;
+    var shown = Math.min(n, VIZ_MAX);
+    var frag = document.createDocumentFragment();
+    for (var i = 0; i < shown; i++) {
+      var b = document.createElement('span');
+      b.className = 'viz__b';
+      b.style.setProperty('--k', i);
+      frag.appendChild(b);
+    }
+    vizGrid.innerHTML = '';
+    vizGrid.appendChild(frag);
+    if (vizMore) {
+      vizMore.textContent = n > VIZ_MAX
+        ? (isAr() ? '+ ' + fmt(n - VIZ_MAX) + ' عبوة أخرى' : '+ ' + fmt(n - VIZ_MAX) + ' more')
+        : '';
+    }
   }
 
   amountEls.forEach(function (b) {
     b.addEventListener('click', function () {
       amount = parseInt(b.getAttribute('data-amt'), 10);
       if (customEl) customEl.value = '';
+      b.classList.remove('rip');
+      void b.offsetWidth;                 // restart the ripple
+      b.classList.add('rip');
       paintAmounts(); paintImpact();
     });
   });
@@ -159,73 +209,88 @@
   }
   paintAmounts(); paintImpact();
 
-  /* ---------- 7. APPLE PAY (not wired up) ---------- */
-  /* Apple Pay cannot run from static hosting. It needs:
-       - a payment provider account (Moyasar, Tap, Checkout.com, Stripe…)
-       - the domain verified with Apple, with their file served from
-         /.well-known/apple-developer-merchantid-domain-association
-       - a server endpoint to validate the merchant session
-     Until all three exist, this button must not look like it works. */
-  var ap = $('#applePay');
-  if (ap) {
-    ap.setAttribute('disabled', 'disabled');
-    ap.setAttribute('aria-disabled', 'true');
-    ap.addEventListener('click', function (e) {
-      e.preventDefault();
-      var note = $('#payNote');
-      if (note) {
-        note.style.transition = 'transform .3s';
-        note.style.transform = 'scale(1.03)';
-        setTimeout(function () { note.style.transform = ''; }, 320);
-      }
-    });
-  }
+  /* ---------- 7. MOYASAR ---------- */
+  /* Mounts the real card + Apple Pay form once a publishable key exists.
+     Moyasar validates the Apple Pay merchant session through its own
+     endpoint, so this page needs no server of its own to take a payment. */
+  function mountPayment() {
+    var gate = $('#payGate');
+    if (!MOYASAR_KEY) return;           // no key: the gate message stays put
 
-  /* ---------- 8. COUNTERS ---------- */
-  var tallies = $$('.tal b[data-count]');
-  var tallyState = 'idle';
+    var css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = 'https://cdn.moyasar.com/mpf/1.15.0/moyasar.css';
+    document.head.appendChild(css);
 
-  function paintTally(p) {
-    tallies.forEach(function (el) {
-      var target = parseInt(el.getAttribute('data-count'), 10) || 0;
-      el.textContent = fmt(target * p);
-    });
+    var js = document.createElement('script');
+    js.src = 'https://cdn.moyasar.com/mpf/1.15.0/moyasar.js';
+    js.onload = function () {
+      if (!window.Moyasar) return;
+      window.Moyasar.init({
+        element: '#moyasarForm',
+        /* Moyasar takes the smallest currency unit — halalas, not riyals */
+        amount: Math.round(amount * 100),
+        currency: 'SAR',
+        description: 'Donation',
+        publishable_api_key: MOYASAR_KEY,
+        callback_url: CALLBACK_URL,
+        methods: ['creditcard', 'applepay'],
+        apple_pay: {
+          country: 'SA',
+          label: 'Water Donation',
+          validate_merchant_url: 'https://api.moyasar.com/v1/applepay/initiate'
+        }
+      });
+      if (gate) gate.style.display = 'none';
+    };
+    js.onerror = function () {
+      if (gate) gate.style.display = '';
+    };
+    document.head.appendChild(js);
   }
-  /* time-based, not frame-based: background tabs clamp timers to ~1s ticks
-     and a fixed step count would crawl there */
-  function runTally() {
-    if (tallyState !== 'idle') return;
-    tallyState = 'run';
+  mountPayment();
+
+  /* ---------- 8. GOAL + SCROLL ---------- */
+  var GOAL_TARGET = 50000;              // illustrative
+  var GOAL_RAISED = 31400;              // illustrative
+  var goalNow = $('#goalNow'), goalBar = $('#goalBar');
+  var goalShown = 0, goalState = 'idle';
+
+  function paintGoal(v) { if (goalNow) goalNow.textContent = fmt(v); }
+
+  function runGoal() {
+    if (goalState !== 'idle') return;
+    goalState = 'run';
+    if (goalBar) goalBar.style.width = (GOAL_RAISED / GOAL_TARGET * 100).toFixed(1) + '%';
     var t0 = Date.now();
     var iv = setInterval(function () {
-      var p = Math.min(1, (Date.now() - t0) / 1500);
-      paintTally(1 - Math.pow(1 - p, 3));
-      if (p >= 1) { clearInterval(iv); tallyState = 'done'; paintTally(1); }
+      var p = Math.min(1, (Date.now() - t0) / 1600);
+      goalShown = GOAL_RAISED * (1 - Math.pow(1 - p, 3));
+      paintGoal(goalShown);
+      if (p >= 1) { clearInterval(iv); goalState = 'done'; goalShown = GOAL_RAISED; paintGoal(goalShown); }
     }, 30);
   }
 
-  /* ---------- 9. SCROLL ---------- */
   var reveals = $$('.rv');
   var heroMedia = $('.hero__media');
   var progFill = $('#progFill');
-  var tallyEl = $('.tally');
+  var rise = $('#rise');
+  var heroEl = $('.hero');
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var lastY = 0, ticking = false;
 
   function onScroll() {
     var vh = window.innerHeight, y = window.scrollY;
+    var max = document.documentElement.scrollHeight - vh;
 
-    if (progFill) {
-      var max = document.documentElement.scrollHeight - vh;
-      progFill.style.width = (max > 0 ? (y / max) * 100 : 0) + '%';
-    }
+    if (progFill) progFill.style.width = (max > 0 ? (y / max) * 100 : 0) + '%';
 
     if (nav) {
-      nav.classList.toggle('stuck', y > 30);
+      nav.classList.toggle('stuck', y > 40);
       var open = menu && menu.classList.contains('open');
       if (!open) {
-        if (y > 420 && y > lastY + 4) nav.classList.add('slid');
-        else if (y < lastY - 4 || y <= 420) nav.classList.remove('slid');
+        if (y > 460 && y > lastY + 4) nav.classList.add('slid');
+        else if (y < lastY - 4 || y <= 460) nav.classList.remove('slid');
       }
     }
     lastY = y;
@@ -234,7 +299,13 @@
       heroMedia.style.transform = 'translate3d(0,' + (y * 0.12).toFixed(1) + 'px,0)';
     }
 
-    if (tallyEl && tallyEl.getBoundingClientRect().top < vh * 0.9) runTally();
+    /* the water level tracks how far into the page you have read */
+    if (rise && heroEl && !reduceMotion) {
+      var h = heroEl.offsetHeight || 1;
+      rise.style.height = Math.max(0, Math.min(1, y / h)) * 62 + '%';
+    }
+
+    if (goalBar && goalBar.getBoundingClientRect().top < vh * 0.95) runGoal();
 
     /* one-way: once revealed it stays revealed, so an anchor jump can never
        strand a section at opacity 0 */
@@ -255,5 +326,10 @@
   onScroll();
   setTimeout(onScroll, 300);
 
-  window.__mock = { setRate: function (r) { LITRES_PER_RIYAL = r; paintImpact(); }, amount: function () { return amount; } };
+  window.__mock = {
+    amount: function () { return amount; },
+    bottles: function () { return bottlesFor(amount); },
+    rate: function () { return SAR_PER_BOTTLE; },
+    paymentMounted: function () { return !!MOYASAR_KEY; }
+  };
 })();
